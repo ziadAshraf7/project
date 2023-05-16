@@ -172,7 +172,7 @@ function Edit({
 
 
             <div className='absolute top-[40px] left-[20px]'>
-                <select className='bg-[#D9D9D9] border-none rounded-xl p-1 text-right w-[341px]' value={code} onChange={(e) => setSelectedFloor(e.target.value)}>
+                <select className='bg-[#D9D9D9] border-none rounded-xl p-1 text-right text-sm sm:text-md w-[200px] sm:w-[341px]' value={code} onChange={(e) => setSelectedFloor(e.target.value)}>
                     {floors.length && floors.map((floor: any) => {
                         return (
                             <option value={floor.name}>
