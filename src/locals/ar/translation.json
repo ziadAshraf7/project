@@ -1,0 +1,20 @@
+{
+    "SGSC LOGIN": "تسجيل دخول SGSC",
+    "Username": "الاسم",
+    "Password": "كلمة المرور",
+    "forget passwored": "هل نسيت كلمة المرور",
+    "remember me": "تذكرني",
+    "Login": "تسجيل دخول",
+    "loading": "انتظر",
+    "Incorrect username or password.": "الاسم او رقم المرور غير صحيحين",
+    "you can’t use symbols eg. !$%& etc.": "!$%& لا يمكنك استخدام احدي تلك الرموز ",
+    "Common offices": "المكاتب الشائعة",
+    "No matches result": "لا يوجد نتائج متاحة",
+    "expand": "امتداد",
+    "floor": "دور",
+    "name": "الاسم",
+    "office number": "رقم المكتب",
+    "employee": "موظف",
+    "office": "رقم المكتب",
+    "type": "نوع"
+}
