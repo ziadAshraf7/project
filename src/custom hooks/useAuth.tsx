@@ -337,7 +337,11 @@ function useAuth() {
 
             const q = query(collection(db, 'floors'), where('name', '==', nameData.prev.split(/\s+/).join(" ")));
             const floorsSnapshot = await getDocs(q);
+            const q1 = query(collection(db, 'employees'), where('name', '==', nameData.prev.split(/\s+/).join(" ")));
+            const q2 = query(collection(db, 'offices'), where('name', '==', nameData.prev.split(/\s+/).join(" ")));
 
+            const floorsSnapshot1 = await getDocs(q1);
+            const floorsSnapshot2 = await getDocs(q2);
 
             floorsSnapshot.forEach(async (item) => {
                 const docRef = doc(db, "floors", item.id);
@@ -346,6 +350,26 @@ function useAuth() {
                 updateDoc(docRef, {
                     ...data,
                     name: nameData.new.split(/\s+/).join(" ")
+                })
+            })
+
+            floorsSnapshot1.forEach(async (item) => {
+                const docRef = doc(db, "employees", item.id);
+                const data = (await getDoc(docRef)).data()
+
+                updateDoc(docRef, {
+                    ...data,
+                    floor: nameData.new.split(/\s+/).join(" ")
+                })
+            })
+
+            floorsSnapshot2.forEach(async (item) => {
+                const docRef = doc(db, "offices", item.id);
+                const data = (await getDoc(docRef)).data()
+
+                updateDoc(docRef, {
+                    ...data,
+                    floor: nameData.new.split(/\s+/).join(" ")
                 })
             })
         }
