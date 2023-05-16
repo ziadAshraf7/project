@@ -135,7 +135,7 @@ function Result({
                 <img className='w-[100px] h-[100px] ' src={require("../../assets/88ee2e29-d2c1-4875-a13c-6758adc4a24e.jpg")} />
             </div>
 
-            <div className='absolute top-[50%]  left-[50%] translate-x-[-50%] translate-y-[-50%]'>
+            <div className='absolute top-[50%] left-[60%] sm:left-[50%] translate-x-[-50%] translate-y-[-50%]'>
 
                 <div className='w-[350px] text-xs sm:w-[600px] mx-auto sm:text-xl font-semibold mb-4'>
                     <div className='flex w-full justify-between'>

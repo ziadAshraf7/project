@@ -1,5 +1,5 @@
 import { query, collection, where, getDocs } from '@firebase/firestore'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { db } from '../../firebase/src/app'
 import EditModal from './editModal'
@@ -13,7 +13,8 @@ function Edit({
     deleteEmployee,
     deleteFloor,
     add,
-    user
+    user,
+    getFloors
 }: {
     getFloor: any,
     updateOffice: any,
@@ -23,6 +24,7 @@ function Edit({
     deleteEmployee: any,
     deleteFloor: any,
     user: any,
+    getFloors: any,
     add: any
 }) {
 
@@ -39,7 +41,17 @@ function Edit({
     let [offices, setOffices] = useState([])
     let [addStatus, setAddStatus] = useState(false)
     let navigate = useNavigate()
+    let [floorNameStatus, setFloorNameStatus] = useState(false)
+    let [floors, setFloors] = useState([])
+    let [selectedFloor, setSelectedFloor] = useState(code)
 
+    useEffect(() => {
+        (async () => {
+            let data = await getFloors()
+
+            setFloors(data)
+        })()
+    }, [])
 
     async function getEmployees(employees: any) {
 
@@ -98,8 +110,12 @@ function Edit({
             }
 
         })()
-    }, [])
+    }, [selectedFloor])
 
+
+    useEffect(() => {
+        navigate(`../edit/${selectedFloor}`)
+    }, [selectedFloor])
 
     async function handleDelete() {
 
@@ -133,7 +149,7 @@ function Edit({
     }
 
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (!user) {
             navigate("../login")
         }
@@ -154,17 +170,31 @@ function Edit({
                 <img className='w-[100px] h-[100px] ' src={require("../../assets/88ee2e29-d2c1-4875-a13c-6758adc4a24e.jpg")} />
             </div>
 
+
+            <div className='absolute top-[40px] left-[20px]'>
+                <select className='bg-[#D9D9D9] border-none rounded-xl p-1 text-right w-[341px]' value={code} onChange={(e) => setSelectedFloor(e.target.value)}>
+                    {floors.length && floors.map((floor: any) => {
+                        return (
+                            <option value={floor.name}>
+                                {floor.name}
+                            </option>
+                        )
+                    })}
+                </select>
+            </div>
+
             {edit && <EditModal
                 add={add}
                 addStatus={addStatus}
                 deleteOffice={deleteOffice}
                 deleteEmployee={deleteEmployee}
+                floorNameStatus={floorNameStatus}
                 updateOffice={updateOffice}
                 updateEmployee={updateEmployee}
                 updateFloor={updateFloor}
                 offices={offices}
                 employees={employees}
-                floorName={focusElm?.code ? "" : focusElm?.name}
+                floorName={focusElm?.floor}
                 code={focusElm?.code}
                 name={focusElm?.code ? focusElm?.name : ""}
                 setEdit={setEdit}
@@ -187,7 +217,6 @@ function Edit({
                         if (Object.keys(focusElm).length > 0) {
                             setEdit(true)
                             setAddStatus(false)
-
                         }
                     }}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -208,7 +237,10 @@ function Edit({
                     <div className='w-full flex justify-between'>
                         {sec1?.map((item: any) => {
                             return (
-                                <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} onClick={() => setFocusElm(item)} className={`w-fit mr-4 ${focusElm.name == item.name ? "bg-red-800 font-bold" : ""} text-center p-4 bg-white`}>
+                                <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} onClick={() => {
+                                    setFocusElm(item)
+                                    setFloorNameStatus(false)
+                                }} className={`w-fit mr-4 ${focusElm.name == item.name ? "bg-red-800 font-bold" : ""} text-center p-4 bg-white`}>
                                     <div className='mb-3'>{item.name}</div>
                                     <div>{item.code}</div>
                                 </div>
@@ -221,7 +253,10 @@ function Edit({
                         <div className='flex flex-col items-center'>
                             {sec2.length > 0 && sec2.slice(0, sec2.length / 2).map((item: any) => {
                                 return (
-                                    <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} onClick={() => setFocusElm(item)} className={`w-fit ${focusElm.name == item.name ? "bg-red-800 font-bold" : ""}  text-center p-4 my-4 bg-white`}>
+                                    <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} onClick={() => {
+                                        setFocusElm(item)
+                                        setFloorNameStatus(false)
+                                    }} className={`w-fit ${focusElm.name == item.name ? "bg-red-800 font-bold" : ""}  text-center p-4 my-4 bg-white`}>
 
                                         <div className='mb-3'>{item.name}</div>
                                         <div>{item.code}</div>
@@ -232,13 +267,19 @@ function Edit({
                         </div>
 
                         <div className=' flex justify-center items-center'>
-                            <div onClick={() => setFocusElm({ name: code })} className={`w-fit ${focusElm.name == code ? "bg-red-800 text-white" : ""}  text-center p-4 bg-white h-[165px] flex items-center bg-white px-5 border-2 border-black rounded-2xl`}>{code}</div>
+                            <div style={{ backgroundColor: floorNameStatus ? "#FF3333" : "white" }} onClick={() => {
+                                setFocusElm({ floor: code })
+                                setFloorNameStatus(true)
+                            }} className={`w-fit ${focusElm.name == code ? "bg-red-800 text-white" : ""}  text-center p-4 bg-white h-[165px] flex items-center bg-white px-5 border-2 border-black rounded-2xl`}>{code}</div>
                         </div>
 
                         <div className='flex flex-col items-center'>
                             {sec2.length > 0 && sec2.slice(sec2.length / 2, sec2.length).map((item: any) => {
                                 return (
-                                    <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} onClick={() => setFocusElm(item)} className={`w-fit  text-xs md:text-sm ${focusElm.name == item.name ? "bg-red-800 font-bold" : ""}  text-center p-4 my-4 bg-white`}>
+                                    <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} onClick={() => {
+                                        setFocusElm(item)
+                                        setFloorNameStatus(false)
+                                    }} className={`w-fit  text-xs md:text-sm ${focusElm.name == item.name ? "bg-red-800 font-bold" : ""}  text-center p-4 my-4 bg-white`}>
                                         <div className='mb-3'>{item.name}</div>
                                         <div>{item.code}</div>
                                     </div>
@@ -250,7 +291,10 @@ function Edit({
                     <div className='w-full flex justify-between'>
                         {sec3?.map((item: any) => {
                             return (
-                                <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} onClick={() => setFocusElm(item)} className={`w-fit mr-4 text-xs md:text-sm ${focusElm.name == item.name ? "bg-red-800 font-bold" : ""}  text-center p-4 bg-white`}>
+                                <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} onClick={() => {
+                                    setFocusElm(item)
+                                    setFloorNameStatus(false)
+                                }} className={`w-fit mr-4 text-xs md:text-sm ${focusElm.name == item.name ? "bg-red-800 font-bold" : ""}  text-center p-4 bg-white`}>
                                     <div className='mb-3'>{item.name}</div>
                                     <div>{item.code}</div>
                                 </div>

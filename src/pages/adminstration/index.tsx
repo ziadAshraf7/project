@@ -1,7 +1,7 @@
 
 
 import { query, collection, where, getDocs } from '@firebase/firestore'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { db } from '../../firebase/src/app'
 import Floor from './floor'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -46,8 +46,6 @@ function Adminstration({
 
     let navigate = useNavigate()
 
-
-
     useEffect(() => {
         (async () => {
             let data = await getOffices()
@@ -80,7 +78,7 @@ function Adminstration({
 
 
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (!user) {
             navigate("../login")
         }
@@ -140,6 +138,8 @@ function Adminstration({
                                     alert("err")
                                 }
                             }
+                        } else {
+                            alert("you should select a field first to delete (employee or office)")
                         }
                     }} className='cursor-pointer'>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">

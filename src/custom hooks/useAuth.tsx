@@ -31,7 +31,7 @@ function useAuth() {
     }
 
     async function getFloor(name: any) {
-        const q = query(collection(db, 'floors'), where('name', '==', name));
+        const q = query(collection(db, 'floors'), where('name', '==', name.split(/\s+/).join(" ")));
         const fetchedFlooes = await getDocs(q)
         return fetchedFlooes.docs[0].data()
     }
@@ -151,7 +151,6 @@ function useAuth() {
         const q = query(collection(db, 'floors'), where('employees', 'array-contains', code));
         let data: any = await getDocs(q)
 
-
         if (data.length > 0) {
             throw new Error("err")
         }
@@ -170,7 +169,7 @@ function useAuth() {
     }
 
     async function checkForFloorName(name: any) {
-        const q = query(collection(db, 'floors'), where('name', '==', name));
+        const q = query(collection(db, 'floors'), where('name', 'array-contains', name.trim));
         let data: any = await getDocs(q)
 
 
@@ -182,28 +181,113 @@ function useAuth() {
 
 
 
+
+    function isFloorNameChanged(nameData: any) {
+        let prevFloorName = nameData.prev.split(/\s+/).join(" ")
+        let newFloorName = nameData.new.split(/\s+/).join(" ")
+
+        if (prevFloorName == newFloorName) {
+            return false
+        } else {
+            return true
+        }
+    }
+
     async function updateFloor({ codeData, nameData, type }: {
         codeData: any,
         type: any,
         nameData: any
     }) {
 
-
         try {
-            await checkForFloorCode(codeData.prev)
+            if (type == "employee") {
+                await checkForFloorCode(codeData.prev)
+
+            } else {
+                await checkForOfficeCode(codeData.prev)
+            }
         } catch {
-            throw new Error("err")
+            throw new Error("this office number is already exists")
+        }
+
+        if (type !== "name") {
+
+            if (isFloorNameChanged(nameData)) {
+                const q = type == "employee" ? query(collection(db, 'floors'), where('employees', 'array-contains', codeData.prev)) :
+                    query(collection(db, 'floors'), where('offices', 'array-contains', codeData.prev))
+
+                const employeesSnapshot: any = await getDocs(q);
+
+                employeesSnapshot.forEach(async (item: any) => {
+                    const docRef = doc(db, "floors", item.id);
+                    const data = (await getDoc(docRef)).data()
+                    const employeesArray = data?.employees
+                    const newData = employeesArray.filter((item: any) => {
+                        if (item !== codeData.prev) {
+                            return true
+                        }
+                    })
+                    if (type == "employee") {
+                        updateDoc(docRef, {
+                            ...data,
+                            employees: newData
+                        })
+                    } else {
+                        updateDoc(docRef, {
+                            ...data,
+                            offices: newData
+                        })
+                    }
+                })
+
+                const q1 = query(collection(db, 'floors'), where('name', '==', nameData.new.split(/\s+/).join(" ")));
+                const fetchedFlooes = await getDocs(q1)
+
+                if (fetchedFlooes.docs.length > 0) {
+                    fetchedFlooes.forEach(async (item: any) => {
+                        const docRef = doc(db, "floors", item.id);
+                        const data = (await getDoc(docRef)).data()
+                        const employeesArray = data?.employees
+                        const array = employeesArray.push(codeData.new)
+                        if (type == "employee") {
+                            updateDoc(docRef, {
+                                ...data,
+                                employees: array
+                            })
+                        } else {
+                            updateDoc(docRef, {
+                                ...data,
+                                offices: array
+                            })
+                        }
+                    })
+                } else {
+                    const collectionRef = collection(db, "floors");
+                    if (type == "employee") {
+                        await addDoc(collectionRef, {
+                            name: nameData.new.split(/\s+/).join(" "),
+                            employees: [codeData.new],
+                            offices: []
+                        });
+                    } else {
+                        await addDoc(collectionRef, {
+                            name: nameData.new.split(/\s+/).join(" "),
+                            employees: [],
+                            offices: [codeData.new]
+                        });
+                    }
+                }
+                return
+            }
         }
 
         if (type == "employee") {
             const q = query(collection(db, 'floors'), where('employees', 'array-contains', codeData.prev));
             const employeesSnapshot = await getDocs(q);
-
             employeesSnapshot.forEach(async (item) => {
                 const docRef = doc(db, "floors", item.id);
                 const data = (await getDoc(docRef)).data()
                 const employeesArray = data?.employees
-
                 const newEmployeesArray = employeesArray.map((item: any) => {
                     if (item == codeData.prev) {
                         return codeData.new
@@ -251,7 +335,7 @@ function useAuth() {
                 throw new Error("err")
             }
 
-            const q = query(collection(db, 'floors'), where('name', '==', nameData.prev));
+            const q = query(collection(db, 'floors'), where('name', '==', nameData.prev.split(/\s+/).join(" ")));
             const floorsSnapshot = await getDocs(q);
 
 
@@ -261,7 +345,7 @@ function useAuth() {
 
                 updateDoc(docRef, {
                     ...data,
-                    name: nameData.new
+                    name: nameData.new.split(/\s+/).join(" ")
                 })
             })
         }
@@ -272,7 +356,7 @@ function useAuth() {
     }) {
 
         try {
-            await checkForFloorName(name)
+            await checkForFloorName(name.split(/\s+/).join(" "))
         } catch {
             throw new Error("err")
         }
@@ -369,7 +453,7 @@ function useAuth() {
         if (type == "floor") {
             const collectionRef = collection(db, "floors");
 
-            const querySnapshot = await getDocs(query(collectionRef, where("name", "==", name)));
+            const querySnapshot = await getDocs(query(collectionRef, where("name", "==", name.split(/\s+/).join(" "))));
 
             querySnapshot.forEach(async (doc) => {
                 try {

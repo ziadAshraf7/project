@@ -6,7 +6,6 @@ import { query, collection, where, getDocs } from '@firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { db } from '../../firebase/src/app'
 import FloorData from './floorData'
-import EditModal from './editModal'
 
 function Floor({
     floorData,

@@ -48,13 +48,9 @@ export default function EditModal({
     async function handleUpdateEmployee() {
         try {
             await Promise.all([
-                updateFloor({ codeData, type: "employee" }),
+                updateFloor({ codeData, type: "employee", nameData: { prev: floorName, new: newFloorName } }),
                 updateEmployee({ newName, codeData, newFloorName })
             ])
-
-            alert("action success")
-            window.location.reload()
-
         } catch {
             alert("the office code or name you want to cahnge to is already exist")
         }
@@ -63,13 +59,9 @@ export default function EditModal({
     async function handleUpdateoffices() {
         try {
             await Promise.all([
-                updateFloor({ codeData, type: "office" }),
+                updateFloor({ codeData, type: "office", nameData: { prev: floorName, new: newFloorName } }),
                 updateOffice({ newName, codeData, newFloorName })
             ])
-
-            alert("action success")
-            window.location.reload()
-
         } catch {
             alert("the office code or name you want to cahnge to is already exist")
         }

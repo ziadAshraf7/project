@@ -18,13 +18,13 @@ import { getAnalytics } from "firebase/analytics";
 
 
 export const firebaseConfig = {
-    apiKey: "AIzaSyAWRRHORTMiq_XhNXgJY0Znyzm6mkGX7Yo",
-    authDomain: "crud1-d698a.firebaseapp.com",
-    projectId: "crud1-d698a",
-    storageBucket: "crud1-d698a.appspot.com",
-    messagingSenderId: "465936418767",
-    appId: "1:465936418767:web:fd0213cb097a63e970b4ba",
-    measurementId: "G-WRHN7RSKHM"
+    apiKey: "AIzaSyDKSM1PplOGuFFmgkQF-Vr1rt1id6QO2ec",
+    authDomain: "crud1-25c6f.firebaseapp.com",
+    projectId: "crud1-25c6f",
+    storageBucket: "crud1-25c6f.appspot.com",
+    messagingSenderId: "276588231663",
+    appId: "1:276588231663:web:c50924823fb3b21858541a",
+    measurementId: "G-RLMEESM6DP"
 };
 
 // Initialize Firebase

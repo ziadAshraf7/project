@@ -65,32 +65,24 @@ function App() {
   // useEffect(() => {
 
   //   (async () => {
-
-  //     // const myCollectionRef1 = collection(db, 'employees');
-  //     // const myCollectionRef2 = collection(db, 'offices');
+  //     const myCollectionRef1 = collection(db, 'employees');
+  //     const myCollectionRef2 = collection(db, 'offices');
   //     const myCollectionRef3 = collection(db, 'floors');
 
-  //     // employees.map(async (item) => {
-  //     //   await addDoc(myCollectionRef1, item);
-  //     // })
+  //     employees.map(async (item) => {
+  //       await addDoc(myCollectionRef1, item);
+  //     })
 
-  //     // offices.map(async (item) => {
-  //     //   await addDoc(myCollectionRef2, item);
-  //     // })
+  //     offices.map(async (item) => {
+  //       await addDoc(myCollectionRef2, item);
+  //     })
 
   //     floors.map(async (item) => {
   //       await addDoc(myCollectionRef3, item);
   //     })
-
-
   //   })()
 
-
   // }, [])
-
-
-
-
 
 
   return (
@@ -145,6 +137,7 @@ function App() {
             updateEmployee={updateEmployee}
             getFloor={getFloor}
             deleteFloor={deleteFloor}
+            getFloors={getFloors}
             add={add}
           />} />
 
