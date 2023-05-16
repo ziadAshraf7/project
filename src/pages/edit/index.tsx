@@ -119,7 +119,8 @@ function Edit({
 
     async function handleDelete() {
 
-        if (!focusElm?.code) {
+        if (floorNameStatus) {
+            alert("you should select a field first to delete (employee or office)")
             return
         }
 
