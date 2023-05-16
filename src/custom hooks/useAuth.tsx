@@ -500,13 +500,19 @@ function useAuth() {
         floor: string
     }) {
 
+        try {
+            if (type == "employee") {
+                await checkForFloorCode(code)
+
+            } else {
+                await checkForOfficeCode(code)
+            }
+        } catch {
+            throw new Error("this office number is already exists")
+        }
+
 
         if (type == "employee") {
-            try {
-                await checkForFloorCode(code)
-            } catch {
-                throw new Error("err")
-            }
             const collectionRef = collection(db, "employees");
 
             await addDoc(collectionRef, {
