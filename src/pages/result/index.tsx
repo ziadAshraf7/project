@@ -137,7 +137,7 @@ function Result({
 
             <div className='absolute top-[50%]  left-[50%] translate-x-[-50%] translate-y-[-50%]'>
 
-                <div className='w-[300px] text-sm sm:w-[400px] mx-auto sm:text-xl font-semibold mb-4'>
+                <div className='w-[350px] text-xs sm:w-[600px] mx-auto sm:text-xl font-semibold mb-4'>
                     <div className='flex w-full justify-between'>
                         <div>{focusElm?.floor ? focusElm.floor : floorName}</div>
                         <div>{focusElm?.name}</div>
