@@ -86,10 +86,9 @@ function useAuth() {
                 return
             }
             const uid = user.uid
-            const docRef = doc(db, "users", uid);
-            const docSnap = await getDoc(docRef);
+            // const docRef = doc(db, "users", uid);
+            // const docSnap = await getDoc(docRef);
             setUser(uid)
-            console.log("djhkjghuguiguigyug")
         })
     }, [])
 

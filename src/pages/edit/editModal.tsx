@@ -181,7 +181,7 @@ export default function EditModal({
 
             <div className=''>
                 <input className='w-[167px]' onChange={(e) => setCode(e.target.value)} value={newCode} type='text' />
-                <span className='text-white p-2'>{t("office number")}</span>
+                <span className='text-white text-xs p-2'>{t("office number")}</span>
             </div>
 
 

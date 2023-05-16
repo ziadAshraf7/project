@@ -94,7 +94,7 @@ function Edit({
             if (data.length < 10) {
                 let length = data.length
                 setSec1(data.slice(0, length / 2))
-                setSec2(data.slice(length / 2, data.length))
+                setSec3(data.slice(length / 2, data.length))
             }
 
         })()
@@ -208,7 +208,7 @@ function Edit({
                     <div className='w-full flex justify-between'>
                         {sec1?.map((item: any) => {
                             return (
-                                <div onClick={() => setFocusElm(item)} className={`w-fit mr-4 ${focusElm.name == item.name ? "bg-red-800 text-white" : ""} text-center p-4 bg-white`}>
+                                <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} onClick={() => setFocusElm(item)} className={`w-fit mr-4 ${focusElm.name == item.name ? "bg-red-800 font-bold" : ""} text-center p-4 bg-white`}>
                                     <div className='mb-3'>{item.name}</div>
                                     <div>{item.code}</div>
                                 </div>
@@ -221,7 +221,7 @@ function Edit({
                         <div className='flex flex-col items-center'>
                             {sec2.length > 0 && sec2.slice(0, sec2.length / 2).map((item: any) => {
                                 return (
-                                    <div onClick={() => setFocusElm(item)} className={`w-fit ${focusElm.name == item.name ? "bg-red-800 text-white" : ""}  text-center p-4 my-4 bg-white`}>
+                                    <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} onClick={() => setFocusElm(item)} className={`w-fit ${focusElm.name == item.name ? "bg-red-800 font-bold" : ""}  text-center p-4 my-4 bg-white`}>
 
                                         <div className='mb-3'>{item.name}</div>
                                         <div>{item.code}</div>
@@ -238,7 +238,7 @@ function Edit({
                         <div className='flex flex-col items-center'>
                             {sec2.length > 0 && sec2.slice(sec2.length / 2, sec2.length).map((item: any) => {
                                 return (
-                                    <div onClick={() => setFocusElm(item)} className={`w-fit  text-xs md:text-sm ${focusElm.name == item.name ? "bg-red-800 text-white" : ""}  text-center p-4 my-4 bg-white`}>
+                                    <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} onClick={() => setFocusElm(item)} className={`w-fit  text-xs md:text-sm ${focusElm.name == item.name ? "bg-red-800 font-bold" : ""}  text-center p-4 my-4 bg-white`}>
                                         <div className='mb-3'>{item.name}</div>
                                         <div>{item.code}</div>
                                     </div>
@@ -250,7 +250,7 @@ function Edit({
                     <div className='w-full flex justify-between'>
                         {sec3?.map((item: any) => {
                             return (
-                                <div onClick={() => setFocusElm(item)} className={`w-fit mr-4 text-xs md:text-sm ${focusElm.name == item.name ? "bg-red-800 text-white" : ""}  text-center p-4 bg-white`}>
+                                <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} onClick={() => setFocusElm(item)} className={`w-fit mr-4 text-xs md:text-sm ${focusElm.name == item.name ? "bg-red-800 font-bold" : ""}  text-center p-4 bg-white`}>
                                     <div className='mb-3'>{item.name}</div>
                                     <div>{item.code}</div>
                                 </div>

@@ -1,5 +1,5 @@
 
-const floors = [
+export const floors = [
     {
         name: "الدور الاول (1)",
         employees: [],
@@ -12,7 +12,7 @@ const floors = [
         offices: ["F099", "F118"]
     },
     {
-        name: "الدور القاني (2)",
+        name: "الدور الثاني (2)",
         employees: ["F094", "F093", "F092", "F091", "F090", "F089", "F077", "F078", "F080",
             "F081", "F082"],
         offices: ["F095", "F076", "F088", "F083"]

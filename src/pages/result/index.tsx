@@ -78,7 +78,7 @@ function Result({
 
     useEffect(() => {
         (async () => {
-            let data = await getFloorByEmployee(code)
+            let data: any
 
             let employees = (await getEmp()).map((item: any) => item.code)
             let offices = (await getOff()).map((item: any) => item.code)
@@ -115,13 +115,14 @@ function Result({
                     if (data.length < 10) {
                         let length = data.length
                         setSec1(data.slice(0, length / 2))
-                        setSec2(data.slice(length / 2, data.length))
+                        setSec3(data.slice(length / 2, data.length))
                     }
                 })
                 setFloorName(name)
             });
         })()
     }, [])
+
 
 
     if (!displayedData.length) {
@@ -138,24 +139,24 @@ function Result({
 
                 <div className='w-[300px] text-sm sm:w-[400px] mx-auto sm:text-xl font-semibold mb-4'>
                     <div className='flex w-full justify-between'>
-                        <div>{focusElm.floor ? focusElm.floor : floorName}</div>
-                        <div>{focusElm.name}</div>
+                        <div>{focusElm?.floor ? focusElm.floor : floorName}</div>
+                        <div>{focusElm?.name}</div>
                     </div>
 
                     <div className='flex justify-between w-full'>
                         <div></div>
-                        <div>رقم المكتب :{focusElm.code}</div>
+                        <div>رقم المكتب :{focusElm?.code}</div>
                     </div>
                 </div>
 
 
-                <div className=' w-fit max-w-fit overflow-x-scroll sm:w-full sm:max-w-full w-[900px] rounded-2xl overflow-y-scroll bg-[#D9D9D9] h-fit max-h-[350px] flex flex-col items-center p-5  justify-between ' >
+                <div className=' w-fit text-xs sm:text-md max-w-fit overflow-x-scroll sm:w-full sm:max-w-full sm:w-[1000px] rounded-2xl overflow-y-scroll bg-[#D9D9D9] h-fit max-h-[350px] flex flex-col items-center p-5  justify-between ' >
                     <div className='w-full flex justify-between'>
                         {sec1?.map((item: any) => {
                             return (
-                                <div className={`w-fit mr-4 ${focusElm.name == item.name ? "bg-red-800 text-white" : ""} text-center p-4 bg-white`}>
-                                    <div className='mb-3'>{item.name}</div>
-                                    <div>{item.code}</div>
+                                <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} className={`w-fit mr-4 ${focusElm?.name == item?.name ? "font-bold bg-[#FF3333] " : ""} text-center p-4 bg-white`}>
+                                    <div className='mb-3'>{item?.name}</div>
+                                    <div>{item?.code}</div>
                                 </div>
                             )
                         })}
@@ -166,17 +167,17 @@ function Result({
                         <div className='flex flex-col items-center'>
                             {sec2.length > 0 && sec2.slice(0, sec2.length / 2).map((item: any) => {
                                 return (
-                                    <div className={`w-fit ${focusElm.name == item.name ? "text-black bg-[#FF3333] " : ""}  text-center p-4 my-4 bg-white`}>
-                                        <div className='mb-3'>{item.name}</div>
-                                        <div>{item.code}</div>
+                                    <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} className={`w-fit ${focusElm?.name == item?.name ? " text-black-100 bg-[#FF3333] " : ""}  text-center p-4 my-4 bg-white`}>
+                                        <div className='mb-3'>{item?.name}</div>
+                                        <div>{item?.code}</div>
                                     </div>
                                 )
                             })}
                         </div>
 
                         <div className='py-4 flex justify-center items-center'>
-                            <div className={`w-fit mr-2 ${focusElm.name == code ? "text-black font-semibold bg-[#FF3333] " : ""}  text-center p-4 bg-white h-[100px] flex flex-col justify-center bg-white px-5 border-2 border-black rounded-3xl`}>
-                                <div className='mb-2'>{focusElm.floor ? focusElm.floor : floorName}</div>
+                            <div className={`w-fit mr-2 ${focusElm?.name == code ? "text-black bg-[#FF3333] " : ""}  text-center p-4 bg-white h-[100px] flex flex-col justify-center bg-white px-5 border-2 border-black rounded-3xl`}>
+                                <div className='mb-2'>{focusElm.floor ? focusElm?.floor : floorName}</div>
                                 <div>{code}</div>
                             </div>
                         </div>
@@ -184,9 +185,9 @@ function Result({
                         <div className='flex flex-col items-center'>
                             {sec2.length > 0 && sec2.slice(sec2.length / 2, sec2.length).map((item: any) => {
                                 return (
-                                    <div className={`w-fit mr-2${focusElm.name == item.name ? "text-black font-semibold bg-[#FF3333] " : ""}  text-center p-4 my-4 bg-white`}>
-                                        <div className='mb-3'>{item.name}</div>
-                                        <div>{item.code}</div>
+                                    <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} className={`w-fit mr-2${focusElm?.name == item?.name ? "text-black bg-[#FF3333] " : ""}  text-center p-4 my-4 bg-white`}>
+                                        <div className='mb-3'>{item?.name}</div>
+                                        <div>{item?.code}</div>
                                     </div>
                                 )
                             })}
@@ -197,7 +198,7 @@ function Result({
                     <div className='w-full flex justify-between'>
                         {sec3?.map((item: any) => {
                             return (
-                                <div className={`w-fit mr-2 ${focusElm?.name == item?.name ? "text-black font-semibold bg-[#FF3333]" : ""}  text-center p-4 bg-white`}>
+                                <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} className={`w-fit mr-2 ${focusElm?.name == item?.name ? "text-black font-semibold bg-[#FF3333]" : ""}  text-center p-4 bg-white`}>
                                     <div className='mb-3'>{item?.name}</div>
                                     <div>{item?.code}</div>
                                 </div>
