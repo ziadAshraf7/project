@@ -45,7 +45,9 @@ export default function EditModal({
     }
 
 
-    async function handleUpdateEmployee() {
+    async function handleUpdateEmployee(e: any) {
+        e.preventDefault()
+
         try {
             await Promise.all([
                 updateFloor({ codeData, type: "employee", nameData: { prev: floorName, new: newFloorName } }),
@@ -56,7 +58,9 @@ export default function EditModal({
         }
     }
 
-    async function handleUpdateoffices() {
+    async function handleUpdateoffices(e: any) {
+        e.preventDefault()
+
         try {
             await Promise.all([
                 updateFloor({ codeData, type: "office", nameData: { prev: floorName, new: newFloorName } }),
@@ -79,12 +83,12 @@ export default function EditModal({
 
     if (addStatus) {
         return (
-            <form onSubmit={async () => {
+            <form onSubmit={async (e: any) => {
+                e.preventDefault()
                 if (newAddedFloorName.length) {
                     try {
                         await addFloor({ name: newAddedFloorName })
-                        alert("action success")
-                        window.location.reload()
+                        alert("action success please refresh the page to see the changes")
                     } catch {
                         alert("error")
                     }
@@ -110,10 +114,12 @@ export default function EditModal({
 
 
     return (
-        <form onSubmit={async () => {
+        <form onSubmit={async (e: any) => {
+            e.preventDefault()
+
             if (checkCode() == "employee") {
                 try {
-                    await handleUpdateEmployee()
+                    await handleUpdateEmployee(e)
                     alert("action success")
                     window.location.reload()
                 } catch {
@@ -121,9 +127,8 @@ export default function EditModal({
                 }
             } else {
                 try {
-                    await handleUpdateoffices()
+                    await handleUpdateoffices(e)
                     alert("action success")
-                    window.location.reload()
                 } catch {
                     alert("err")
                 }

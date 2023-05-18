@@ -82,8 +82,8 @@ function Edit({
     useEffect(() => {
         (async () => {
             let { employees: employeesArray, offices: officesArray } = await getFloor(code)
-            let employees = await getEmployees(employeesArray)
-            let offices = await getOffices(officesArray)
+            let employees = (await getEmployees(employeesArray)).filter(item => !!item)
+            let offices = (await getOffices(officesArray)).filter(item => !!item)
             setData([...employees, ...offices])
 
             let data: any = [...employees, ...offices]
@@ -92,12 +92,12 @@ function Edit({
             setOffices(offices as any)
 
 
-            if (data.length > 12) {
+            if (data.length >= 12) {
                 setSec1(data.slice(0, 6))
                 setSec3(data.slice(6, 12))
                 setSec2(data.slice(12, data.length))
             }
-            if (data.length > 10 && data.length < 12) {
+            if (data.length >= 10 && data.length < 12) {
                 setSec1(data.slice(0, 5))
                 setSec3(data.slice(5, 10))
                 setSec2(data.slice(10, data.length))
@@ -124,31 +124,32 @@ function Edit({
             return
         }
 
-        if (offices.map((item: any) => item.code).includes(focusElm.code)) {
+        if (offices.map((item: any) => item?.code).includes(focusElm?.code)) {
             try {
                 await Promise.all([
-                    deleteFloor({ type: "office", name: code }),
+                    deleteFloor({ type: "office", code }),
                     deleteOffice(focusElm.code)
                 ])
-
+                alert("action success please refresh the page to see the changes")
             } catch {
-                alert("err")
+                alert("error")
             }
             return
         }
 
-        if (employees.map((item: any) => item.code).includes(focusElm.code)) {
+        if (employees.map((item: any) => item?.code).includes(focusElm?.code)) {
             try {
                 await Promise.all([
-                    deleteFloor({ type: "employee", name: code }),
+                    deleteFloor({ type: "employee", code }),
                     deleteEmployee(focusElm.code)
                 ])
-            } catch {
-                alert("err")
+                alert("action success please refresh the page to see the changes")
+
+            } catch (e) {
+                alert("error")
             }
         }
     }
-
 
     useLayoutEffect(() => {
         if (!user) {
@@ -176,8 +177,8 @@ function Edit({
                 <select className='bg-[#D9D9D9] border-none rounded-xl p-1 text-right text-sm sm:text-md w-[200px] sm:w-[341px]' value={code} onChange={(e) => setSelectedFloor(e.target.value)}>
                     {floors.length && floors.map((floor: any) => {
                         return (
-                            <option value={floor.name}>
-                                {floor.name}
+                            <option value={floor?.name}>
+                                {floor?.name}
                             </option>
                         )
                     })}
@@ -195,7 +196,7 @@ function Edit({
                 updateFloor={updateFloor}
                 offices={offices}
                 employees={employees}
-                floorName={focusElm?.floor}
+                floorName={focusElm?.floor || code}
                 code={focusElm?.code}
                 name={focusElm?.code ? focusElm?.name : ""}
                 setEdit={setEdit}
@@ -206,6 +207,7 @@ function Edit({
 
                 <div className='w-[400px] p-3 mx-auto flex justify-between'>
                     <div className='cursor-pointer' onClick={() => {
+                        setFocusElm(false)
                         setAddStatus(true)
                         setEdit(true)
                     }}>
@@ -235,32 +237,32 @@ function Edit({
 
 
                 <div className='w-fit overflow-x-scroll  sm:w-full rounded-2xl overflow-y-scroll bg-[#D9D9D9] h-fit max-h-[350px] flex flex-col items-center p-5  justify-between ' >
-                    <div className='w-full flex justify-between'>
+                    <div className='w-full mb-4 flex justify-between'>
                         {sec1?.map((item: any) => {
                             return (
-                                <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} onClick={() => {
+                                <div style={{ backgroundColor: (focusElm?.name == item?.name && item) ? "#FF3333" : "white" }} onClick={() => {
                                     setFocusElm(item)
                                     setFloorNameStatus(false)
-                                }} className={`w-fit mr-4 ${focusElm.name == item.name ? "bg-red-800 font-bold" : ""} text-center p-4 bg-white`}>
-                                    <div className='mb-3'>{item.name}</div>
-                                    <div>{item.code}</div>
+                                }} className={`w-fit mr-4 ${focusElm?.name == item?.name ? "bg-red-800 font-bold" : ""} text-center p-4 bg-white`}>
+                                    <div className='mb-3'>{item?.name}</div>
+                                    <div>{item?.code}</div>
                                 </div>
                             )
                         })}
                     </div>
 
 
-                    <div className='w-full flex justify-between'>
+                    <div className='w-full mb-4 flex justify-between'>
                         <div className='flex flex-col items-center'>
                             {sec2.length > 0 && sec2.slice(0, sec2.length / 2).map((item: any) => {
                                 return (
-                                    <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} onClick={() => {
+                                    <div style={{ backgroundColor: (focusElm?.name == item?.name && item) ? "#FF3333" : "white" }} onClick={() => {
                                         setFocusElm(item)
                                         setFloorNameStatus(false)
-                                    }} className={`w-fit ${focusElm.name == item.name ? "bg-red-800 font-bold" : ""}  text-center p-4 my-4 bg-white`}>
+                                    }} className={`w-fit ${focusElm?.name == item?.name ? "bg-red-800 font-bold" : ""}  text-center p-4 my-4 bg-white`}>
 
-                                        <div className='mb-3'>{item.name}</div>
-                                        <div>{item.code}</div>
+                                        <div className='mb-3'>{item?.name}</div>
+                                        <div>{item?.code}</div>
 
                                     </div>
                                 )
@@ -271,18 +273,18 @@ function Edit({
                             <div style={{ backgroundColor: floorNameStatus ? "#FF3333" : "white" }} onClick={() => {
                                 setFocusElm({ floor: code })
                                 setFloorNameStatus(true)
-                            }} className={`w-fit ${focusElm.name == code ? "bg-red-800 text-white" : ""}  text-center p-4 bg-white h-[165px] flex items-center bg-white px-5 border-2 border-black rounded-2xl`}>{code}</div>
+                            }} className={`w-fit ${focusElm?.name == code ? "bg-red-800 text-white" : ""}  text-center p-4 bg-white h-[90px] flex items-center bg-white px-5 border-2 border-black rounded-2xl`}>{code}</div>
                         </div>
 
                         <div className='flex flex-col items-center'>
                             {sec2.length > 0 && sec2.slice(sec2.length / 2, sec2.length).map((item: any) => {
                                 return (
-                                    <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} onClick={() => {
+                                    <div style={{ backgroundColor: (focusElm?.name == item?.name && item) ? "#FF3333" : "white" }} onClick={() => {
                                         setFocusElm(item)
                                         setFloorNameStatus(false)
-                                    }} className={`w-fit  text-xs md:text-sm ${focusElm.name == item.name ? "bg-red-800 font-bold" : ""}  text-center p-4 my-4 bg-white`}>
-                                        <div className='mb-3'>{item.name}</div>
-                                        <div>{item.code}</div>
+                                    }} className={`w-fit  text-xs md:text-sm ${(focusElm?.name == item?.name && item) ? "bg-red-800 font-bold" : ""}  text-center p-4 my-4 bg-white`}>
+                                        <div className='mb-3'>{item?.name}</div>
+                                        <div>{item?.code}</div>
                                     </div>
                                 )
                             })}
@@ -292,12 +294,12 @@ function Edit({
                     <div className='w-full flex justify-between'>
                         {sec3?.map((item: any) => {
                             return (
-                                <div style={{ backgroundColor: focusElm?.name == item?.name ? "#FF3333" : "white" }} onClick={() => {
+                                <div style={{ backgroundColor: (focusElm?.name == item?.name && item) ? "#FF3333" : "white" }} onClick={() => {
                                     setFocusElm(item)
                                     setFloorNameStatus(false)
-                                }} className={`w-fit mr-4 text-xs md:text-sm ${focusElm.name == item.name ? "bg-red-800 font-bold" : ""}  text-center p-4 bg-white`}>
-                                    <div className='mb-3'>{item.name}</div>
-                                    <div>{item.code}</div>
+                                }} className={`w-fit mr-4 text-xs md:text-sm ${focusElm?.name == item?.name ? "bg-red-800 font-bold" : ""}  text-center p-4 bg-white`}>
+                                    <div className='mb-3'>{item?.name}</div>
+                                    <div>{item?.code}</div>
                                 </div>
                             )
                         })}

@@ -4,7 +4,7 @@
 
 import React, { useEffect, useState } from 'react'
 
-import { getFirestore, collection, addDoc, getDocs, query, where, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, query, where, getDoc, updateDoc, deleteDoc, arrayUnion } from "firebase/firestore";
 import { app, db } from '../firebase/src/app';
 
 
@@ -423,7 +423,7 @@ function useAuth() {
     }
 
 
-    async function deleteFloor({ code, name, type }: {
+    async function deleteFloor({ code, type }: {
         code: any,
         type: any,
         name: any
@@ -474,20 +474,20 @@ function useAuth() {
             })
         }
 
-        if (type == "floor") {
-            const collectionRef = collection(db, "floors");
+        // if (type == "floor") {
+        //     const collectionRef = collection(db, "floors");
 
-            const querySnapshot = await getDocs(query(collectionRef, where("name", "==", name.split(/\s+/).join(" "))));
+        //     const querySnapshot = await getDocs(query(collectionRef, where("name", "==", name.split(/\s+/).join(" "))));
 
-            querySnapshot.forEach(async (doc) => {
-                try {
-                    await deleteDoc(doc.ref);
-                    console.log("Document deleted successfully");
-                } catch (error) {
-                    console.error("Error deleting document: ", error);
-                }
-            });
-        }
+        //     querySnapshot.forEach(async (doc) => {
+        //         try {
+        //             await deleteDoc(doc.ref);
+        //             console.log("Document deleted successfully");
+        //         } catch (error) {
+        //             console.error("Error deleting document: ", error);
+        //         }
+        //     });
+        // }
     }
 
 
@@ -521,25 +521,20 @@ function useAuth() {
                 floor: floor
             });
 
-            const q = query(collection(db, 'floors'), where('employees', 'array-contains', code));
+            const q = query(collection(db, 'floors'), where('name', '==', floor.split(/\s+/).join(" ")));
             const officesSnapshot = await getDocs(q);
-
 
             officesSnapshot.forEach(async (item) => {
                 const docRef = doc(db, "floors", item.id);
                 const data = (await getDoc(docRef)).data()
-                const employeesArray = data?.employees
-
-                const newEmployeesArray = employeesArray.push(code)
 
                 updateDoc(docRef, {
                     ...data,
-                    offices: newEmployeesArray
+                    employees: arrayUnion(code)
                 })
 
             })
         }
-
 
         if (type == "office") {
             try {
@@ -555,7 +550,7 @@ function useAuth() {
                 floor: floor
             });
 
-            const q = query(collection(db, 'floors'), where('offices', 'array-contains', code));
+            const q = query(collection(db, 'floors'), where('offices', '==', floor.split(/\s+/).join(" ")));
             const officesSnapshot = await getDocs(q);
 
             officesSnapshot.forEach(async (item) => {
@@ -563,11 +558,9 @@ function useAuth() {
                 const data = (await getDoc(docRef)).data()
                 const employeesArray = data?.employees
 
-                const newEmployeesArray = employeesArray.push(code)
-
                 updateDoc(docRef, {
                     ...data,
-                    offices: newEmployeesArray
+                    offices: arrayUnion(code)
                 })
 
             })

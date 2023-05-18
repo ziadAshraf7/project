@@ -4,7 +4,6 @@ import { query, collection, where, getDocs } from '@firebase/firestore'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { db } from '../../firebase/src/app'
 import Floor from './floor'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import EditModal from './editModal'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -16,6 +15,7 @@ function Adminstration({
     add,
     user,
     getEmployees,
+    deleteOffice,
     getOffices,
     updateOffice,
     addFloor,
@@ -24,6 +24,7 @@ function Adminstration({
     getFloors: any,
     updateFloor: any,
     updateEmployee: any,
+    deleteOffice: any,
     add: any,
     user: any,
     getEmployees: any,
@@ -77,7 +78,6 @@ function Adminstration({
     }
 
 
-
     useLayoutEffect(() => {
         if (!user) {
             navigate("../login")
@@ -123,19 +123,23 @@ function Adminstration({
                         if (focusElm.code) {
                             if (employees.map((item: any) => item.code).includes(focusElm.code)) {
                                 try {
-                                    await deleteFloor({ type: "employee", code: focusElm.code })
-                                    alert("action success")
-                                    window.location.reload()
+                                    await Promise.all([
+                                        deleteFloor({ type: "employee", code: focusElm.floor }),
+                                        deleteOffice(focusElm.code)
+                                    ])
+                                    alert("action success please refresh teh page to see the changes")
                                 } catch {
-                                    alert("err")
+                                    alert("something went wrong")
                                 }
                             } else {
                                 try {
-                                    await deleteFloor({ type: "office", code: focusElm.code })
-                                    alert("action success")
-                                    window.location.reload()
+                                    await Promise.all([
+                                        deleteFloor({ type: "office", code: focusElm.floor }),
+                                        deleteOffice(focusElm.code)
+                                    ])
+                                    alert("action success please refresh teh page to see the changes")
                                 } catch {
-                                    alert("err")
+                                    alert("something went wrong")
                                 }
                             }
                         } else {

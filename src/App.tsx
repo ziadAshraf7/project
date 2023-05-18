@@ -61,7 +61,6 @@ function App() {
 
 
 
-
   // useEffect(() => {
 
   //   (async () => {
@@ -117,6 +116,7 @@ function App() {
         <Route path="/adminstration"
           element={<Adminstration
             user={user}
+            deleteOffice={deleteOffice}
             updateEmployee={updateEmployee}
             getOffices={getOffices}
             updateOffice={updateOffice}

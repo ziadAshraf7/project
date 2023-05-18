@@ -56,23 +56,24 @@ export default function EditModal({
         new: newFloorName
     }
 
-    async function handleUpdate() {
 
-        if (offices.map((item: any) => item.code).includes(codeData.prev)) {
+    async function handleUpdate(e: any) {
+        e.preventDefault()
+        if (offices.map((item: any) => item?.code).includes(codeData.prev) && !floorNameStatus) {
             try {
                 await Promise.all([
                     updateOffice({ codeData, newName, newFloorName }),
                     updateFloor({ codeData, type: "office", nameData: { prev: floorName, new: newFloorName } })
                 ])
                 alert("action success refresh the page to see the changes")
-                window.location.reload()
             } catch {
                 alert("error")
             }
         }
 
-        if (employees.map((item: any) => item.code).includes(codeData?.prev)) {
+        if (employees.map((item: any) => item?.code).includes(codeData?.prev) && !floorNameStatus) {
             try {
+                console.log("update")
                 await Promise.all([
                     updateFloor({ codeData, type: "employee", nameData: { prev: floorName, new: newFloorName } }),
                     updateEmployee({ codeData, newName, newFloorName })
@@ -95,12 +96,13 @@ export default function EditModal({
     }
 
 
-    async function handleOpen() {
+    async function handleOpen(e: any) {
+        e.preventDefault()
         try {
             await add({ floor: floorName, type: type, code: newCode, name: newName })
             alert("action success")
-        } catch {
-            alert("err")
+        } catch (e) {
+            alert("something went wrong you may are trying to add an office number that is already exists")
         }
     }
 
